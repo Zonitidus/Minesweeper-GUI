@@ -40,21 +40,27 @@ public class MenuController implements Initializable {
 
 		Parent root;
 		
-		int lX = 0;
-		int lY = 0;
-		int minH = 0;
-		int maxH = 0;
-		int minW = 0;
-		int maxW = 0;
-		
+		int w = 0;
+		int h = 0;
+
 		int dif = 0;
 		
-		if(ae.getSource().equals(noobie))
+		if(ae.getSource().equals(noobie)) {
 			dif = Buscaminas.PRINCIPIANTE;
-		else if(ae.getSource().equals(medium))
+			w = 600;
+			h = 600;
+			
+		}
+		else if(ae.getSource().equals(medium)) {
 			dif = Buscaminas.INTERMEDIO;
-		else 
+			w = 740;
+			h = 750;
+			}
+		else {
 			dif = Buscaminas.EXPERTO;
+			w = 1280;
+			h = 800;
+			}
 		
 		this.tab = new Buscaminas(dif);
 		try {
@@ -63,18 +69,15 @@ public class MenuController implements Initializable {
 
 			GridPane tab = new GridPane();
 
-			tab.setLayoutX(lX);
-			tab.setLayoutY(lY);
-
 			p.getChildren().add(tab);
 
 			levelController l = loader.getController();
 			l.setTab(this.tab);
-			l.initializeTable();
+			l.initializeTable(null);
 			
 			Stage st = (Stage) ((Node) ae.getSource()).getScene().getWindow();
-			st.setScene(new Scene(root));
-
+			st.setScene(new Scene(root, w, h));
+			
 		} catch (IOException e) {
 
 			e.printStackTrace();

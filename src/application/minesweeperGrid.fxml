@@ -22,6 +22,7 @@
       <Label fx:id="coordenadas" layoutX="296.0" layoutY="18.0" text="coordenadas" />
       <GridPane fx:id="grid" layoutX="44.0" layoutY="83.0" prefHeight="274.0" prefWidth="513.0">
       </GridPane>
-      <Button layoutX="108.0" layoutY="21.0" mnemonicParsing="false" text="Pista" onAction="#darPista"/>
+      <Button layoutX="108.0" layoutY="21.0" mnemonicParsing="false" onAction="#darPista" text="Pista" />
+      <Button layoutX="421.0" layoutY="23.0" mnemonicParsing="false" text="Resolver" onAction="#resolve" />
    </children>
 </Pane>

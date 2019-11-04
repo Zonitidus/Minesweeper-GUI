@@ -32,7 +32,7 @@ import modelo.Buscaminas;
 public class levelController extends Application {
 
 	private Buscaminas tab;
-	
+
 	private MediaPlayer mp;
 
 	@FXML
@@ -40,6 +40,7 @@ public class levelController extends Application {
 
 	@FXML
 	private Pane grid;
+
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -50,116 +51,99 @@ public class levelController extends Application {
 
 	}
 
-	public void initializeTable() {
-		tab = new Buscaminas(tab.darNivel());
+	public void initializeTable(Buscaminas t) {
+		if (t == null)
+			tab = new Buscaminas(tab.darNivel());
+		else {
+			tab = t;
+		}
+
 		GridPane theGrid = new GridPane();
 		grid.getChildren().add(theGrid);
 
 		int rows = tab.darCasillas().length;
 		int cols = tab.darCasillas()[0].length;
 
-		/*
-		 * theGrid.setMinHeight(400); theGrid.setMaxHeight(400);
-		 * theGrid.setMinWidth(400); theGrid.setMaxWidth(400);
-		 * 
-		 * for (int i = 0; i < rows; i++) { ColumnConstraints colConst = new
-		 * ColumnConstraints(); colConst.setPercentWidth(100.0 / cols);
-		 * theGrid.getColumnConstraints().add(colConst); } for (int i = 0; i < cols;
-		 * i++) { RowConstraints rowConst = new RowConstraints();
-		 * rowConst.setPercentHeight(100.0 / rows);
-		 * theGrid.getRowConstraints().add(rowConst); }
-		 */
-		
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 
 				Button b = new Button(tab.darCasillas()[i][j].mostrarValorCasilla());
 				final int i_button = i;
 				final int j_button = j;
-				b.setMinSize(28, 28);
+				b.setMinSize(40, 40);
 				b.setOnMouseClicked(e -> {
 
 					coordenadas.setText(i_button + "," + j_button);
 
-					if(e.getButton() == MouseButton.PRIMARY) {
-						
-						if(!b.getText().equals("|>")) {
+					if (e.getButton() == MouseButton.PRIMARY) {
+
+						if (!b.getText().equals("|>")) {
 							tab.abrirCasilla(i_button, j_button);
-							if(!tab.darCasillas()[i_button][j_button].esMina())
+							if (!tab.darCasillas()[i_button][j_button].esMina()) {
 								b.setText(Integer.toString(tab.darCasillas()[i_button][j_button].darValor()));
-							else {
+
+								if (tab.gano()) {
+									winner();
+								}
+							} else {
 								b.setText("*");
 								BOOM();
 								Alert a = new Alert(AlertType.INFORMATION, "OH NOOOOO");
-								a.setTitle("Perdiste :(");
+								a.setTitle("Mission failed, we'll get em next time");
 								a.showAndWait();
 								reiniciar();
 							}
-						
+
 						}
-					}
-					else{
-						
-						if(b.getText().equals("|>")) {
-							
+					} else {
+
+						if (b.getText().equals("|>")) {
+
 							b.setText("");
-						}
-						else {
+						} else {
 							b.setText("|>");
 						}
 					}
-					
-					
+
 				});
 
 				theGrid.add(b, j, i);
 
 			}
 		}
+		
+		
+		if(tab.gano())
+			winner();
 	}
 
 	public void setTab(Buscaminas ms) {
 		this.tab = ms;
 	}
-	
+
 	public void reiniciar() {
-		
+
 		grid.getChildren().clear();
-		initializeTable();
+		initializeTable(null);
 	}
-	
+
 	public void darPista(ActionEvent eo) {
-		
+
 		String pis = tab.darPista();
-		
 		String p[] = pis.split(",");
-		
-		if(pis.equals("-")) {
-			
+
+		if (pis.equals("-")) {
+
 			Alert a = new Alert(AlertType.INFORMATION, "No hay más pistas disponibles.");
 			a.showAndWait();
-		}
-		else {
+		} else {
 
-			try {
-				
-				tab.abrirCasilla(Integer.parseInt(p[0]), Integer.parseInt(p[1]));
-				
-				
-				GridPane kk = (GridPane) grid.getChildren().get(0);
-				
-				((Button) kk.getChildren().get(1)).setText(Integer.toString(tab.darCasillas()[Integer.parseInt(p[0])-1][Integer.parseInt(p[1])-1].darValor()));
-				
-			}catch(Exception e) {
-				Alert a = new Alert(AlertType.INFORMATION, "No hay más pistas disponibles.");
-				a.showAndWait();
-			}
+			tab.abrirCasilla(Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]) - 1);
+			initializeTable(tab);
 		}
-			
-		
-		
+
 	}
-	
+
 	public void goBack(ActionEvent ae) {
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/mainMenu.fxml"));
@@ -179,17 +163,37 @@ public class levelController extends Application {
 		st.setScene(new Scene(root));
 
 	}
-	
-	
+
 	public void BOOM() {
-		
+
 		String path = "src//resources//boom.mp3";
-		
+
 		Media media = new Media(new File(path).toURI().toString());
-		
+
 		mp = new MediaPlayer(media);
 		mp.play();
 	}
+
+	public void winner() {
+
+		String path = "src//resources//winner.mp3";
+
+		Media media = new Media(new File(path).toURI().toString());
+
+		mp = new MediaPlayer(media);
+		mp.play();
+		
+		Alert a = new Alert(AlertType.INFORMATION, "Very impresisve");
+		a.setTitle(":)");
+		a.showAndWait();
+		reiniciar();
+
+	}
 	
+	public void resolve(ActionEvent eo) {
+		
+		tab.resolver();
+		initializeTable(tab);
+	}
 
 }
