@@ -1,9 +1,11 @@
 package controller;
 
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.IOException;
 
 import com.sun.javafx.scene.control.skin.ButtonSkin;
+import com.sun.media.jfxmedia.AudioClip;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -16,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -29,6 +32,8 @@ import modelo.Buscaminas;
 public class levelController extends Application {
 
 	private Buscaminas tab;
+	
+	private MediaPlayer mp;
 
 	@FXML
 	private Label coordenadas;
@@ -68,21 +73,15 @@ public class levelController extends Application {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 
-				Button b = new Button();
+				Button b = new Button(tab.darCasillas()[i][j].mostrarValorCasilla());
 				final int i_button = i;
 				final int j_button = j;
 				b.setMinSize(28, 28);
-				b.setOnAction(e -> {
+				b.setOnMouseClicked(e -> {
 
 					coordenadas.setText(i_button + "," + j_button);
-					
-//					Media media = new Media("/resources/boom.mp3");
-//					media.setOnError(() -> System.out.println("error media"));
-//
-//					MediaPlayer player = new MediaPlayer(media);
-					
-					
-					if(true) {
+
+					if(e.getButton() == MouseButton.PRIMARY) {
 						
 						if(!b.getText().equals("|>")) {
 							tab.abrirCasilla(i_button, j_button);
@@ -90,9 +89,9 @@ public class levelController extends Application {
 								b.setText(Integer.toString(tab.darCasillas()[i_button][j_button].darValor()));
 							else {
 								b.setText("*");
+								BOOM();
 								Alert a = new Alert(AlertType.INFORMATION, "OH NOOOOO");
 								a.setTitle("Perdiste :(");
-//								player.play();
 								a.showAndWait();
 								reiniciar();
 							}
@@ -182,7 +181,15 @@ public class levelController extends Application {
 	}
 	
 	
-	
+	public void BOOM() {
+		
+		String path = "src//resources//boom.mp3";
+		
+		Media media = new Media(new File(path).toURI().toString());
+		
+		mp = new MediaPlayer(media);
+		mp.play();
+	}
 	
 
 }
