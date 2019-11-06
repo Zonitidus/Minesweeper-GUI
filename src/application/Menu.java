@@ -17,12 +17,8 @@ import modelo.Buscaminas;
 
 public class Menu extends Application {
 
-	public static Stage primaryStage;
-
 	@Override
-	public void start(Stage stage) throws Exception {
-
-		this.primaryStage = stage;
+	public void start(Stage primaryStage) throws Exception {
 
 		Parent root = FXMLLoader.load(getClass().getResource("/application/mainMenu.fxml"));
 
@@ -35,10 +31,6 @@ public class Menu extends Application {
 	public static void main(String[] args) {
 		launch(args);
 
-	}
-
-	private Stage getPStage() {
-		return primaryStage;
 	}
 
 }

@@ -47,10 +47,6 @@ public class levelController extends Application {
 
 	}
 
-	public void initialize() {
-
-	}
-
 	public void initializeTable(Buscaminas t) {
 		if (t == null)
 			tab = new Buscaminas(tab.darNivel());
@@ -183,7 +179,7 @@ public class levelController extends Application {
 		mp = new MediaPlayer(media);
 		mp.play();
 		
-		Alert a = new Alert(AlertType.INFORMATION, "Very impresisve");
+		Alert a = new Alert(AlertType.INFORMATION, "Very impressive");
 		a.setTitle(":)");
 		a.showAndWait();
 		reiniciar();
